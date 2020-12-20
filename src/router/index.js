@@ -21,16 +21,19 @@ export default new Router({
       path: '/index',
       name: 'index',
       component: Index,
+      meta: {title: '首页'},
       children: [
         {
           path: '/goods',
           name: 'goods',
-          component: Goods
+          component: Goods,
+          meta: {title: '商场'},
         },
         {
           path: '/echarts',
           name: 'echarts',
-          component: Echarts
+          component: Echarts,
+          meta: {title: '表格'},
         }
       ]
     },

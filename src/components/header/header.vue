@@ -2,8 +2,8 @@
   <div class="header-box">
     <el-row type="flex" justify="space-between">
       <el-col :span="12">
-        <button class="btn-tool" title="折叠" @click="collapse" >
-            <i class="el-icon-d-arrow-left"></i>
+        <button class="btn-tool" :title="collapseTitle" @click="collapse" >
+            <i :class="collapseIcon"></i>
         </button>
 <!--        <button class="btn-tool" title="刷新" @click="refresh">-->
 <!--            <i class="el-icon-refresh"></i>-->
@@ -51,13 +51,21 @@ export default {
   ],
   data () {
     return {
-      isCollapse: false,
+      collapseIcon: 'el-icon-d-arrow-left',
+      collapseTitle: '折叠',
       dialogVisible: false,
       notes: ''
     }
   },
   methods: {
     collapse () {
+      if(this.isCollapse){
+        this.collapseIcon = 'el-icon-d-arrow-left'
+        this.collapseTitle = '折叠'
+      }else{
+        this.collapseIcon = 'el-icon-d-arrow-right'
+        this.collapseTitle = '展开'
+      }
       this.$store.commit('switchCollapse')
     },
     refresh () {
@@ -99,14 +107,9 @@ export default {
     this.notes = localStorage.getItem(this.username) || '便签中的内容会存储在本地，这样即便你关掉了浏览器，在下次打开时，依然会读取到上一次的记录。是个非常小巧实用的本地备忘录'
   },
   computed: {
-    // username () {
-    //   let user = JSON.parse(sessionStorage.getItem('user'))
-    //   if (user) {
-    //     return user.userName.toUpperCase()
-    //   } else {
-    //     return ''
-    //   }
-    // }
+    isCollapse () {
+      return this.$store.state.isCollapse
+    }
   }
 }
 </script>

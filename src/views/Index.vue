@@ -20,7 +20,13 @@
         <Headers :username="username"/>
       </el-header>
       <el-main>
-        <router-view v-if="isRouterAlive"/>
+        <div class="bar">
+          <NavBar></NavBar>
+        </div>
+        <transition name="slide-fade">
+          <router-view v-if="isRouterAlive"/>
+        </transition>
+<!--        <router-view v-if="isRouterAlive"/>-->
       </el-main>
     </el-container>
   </el-container>
@@ -29,11 +35,17 @@
 <script>
 import NavMenu from '@/components/menus/NavMenu'
 import Headers from '@/components/header/header'
+import NavBar from '@/components/navBar'
 export default {
   provide () {
     return {
       reload: this.reload,
     }
+  },
+  components: {
+    NavMenu,
+    Headers,
+    NavBar
   },
   data () {
     return {
@@ -93,10 +105,6 @@ export default {
         }
       ]
     }
-  },
-  components: {
-    NavMenu,
-    Headers
   },
   methods: {
     reload () {
@@ -168,6 +176,9 @@ export default {
   .menu-nav:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
+  }
+  .bar {
+    margin-bottom: 8px;
   }
 }
 </style>
