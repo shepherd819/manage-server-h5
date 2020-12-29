@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
 import Echarts from '../views/Echarts.vue'
 import Goods from '../views/Goods.vue'
+import RoleManage from "../views/RoleManage";
 Vue.use(Router)
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
@@ -34,6 +35,12 @@ export default new Router({
           name: 'echarts',
           component: Echarts,
           meta: {title: '表格'},
+        },
+        {
+            path: '/roleManage',
+          name: 'roleManage',
+          component: RoleManage,
+          meta: {title: '角色管理'},
         }
       ]
     },

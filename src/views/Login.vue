@@ -20,15 +20,16 @@
           <i slot="suffix" class="el-input__icon el-icon-view btn-eye" @click="changeType"></i>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
-        <el-input v-model="loginForm.code"
-                  @keyup.native.enter="login('loginForm')"
-                  autocomplete="off"
-                  placeholder="请输入验证码"
-                  prefix-icon="el-icon-message" style="width: 250px"
-                  @keydown.enter.native="login('loginForm')">
-        </el-input>
-        <img :src="verifyCode" @click="updateVerifyCode" style="cursor: pointer"/>
+      <el-form-item prop="code" class="verifyCode">
+        <div style="display: flex">
+          <el-input v-model="loginForm.code"
+                    @keyup.native.enter="login('loginForm')"
+                    autocomplete="off"
+                    placeholder="请输入验证码"
+                    prefix-icon="el-icon-message" style="width: 250px">
+          </el-input>
+          <img :src="verifyCode" @click="updateVerifyCode" style="cursor: pointer;margin-left: 10px"/>
+        </div>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="login('loginForm')" class="login-btn" >登 录</el-button>

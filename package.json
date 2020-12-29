@@ -2,7 +2,7 @@
   "name": "manage-server-h5",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "chengxiong <chengxiong@log56.com>",
+  "author": "chengxiong <cxlsn919@126.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

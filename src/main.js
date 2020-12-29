@@ -15,6 +15,20 @@ Vue.prototype.getHttp = getHttp
 Vue.prototype.deleteHttp = deleteHttp
 Vue.prototype.postFormHttp = postFormHttp
 
+Vue.directive('dbClick', {
+  inserted(el, binding) {
+    el.addEventListener('click', e => {
+      if (!el.disabled) {
+        el.disabled = true
+        el.style.cursor = 'not-allowed'
+        setTimeout(() => {
+          el.style.cursor = 'pointer'
+          el.disabled = false
+        }, 1500)
+      }
+    })
+  }
+})
 Vue.use(ElementUI)
 Vue.prototype.Utils = Utils
 Vue.config.productionTip = false

@@ -10,29 +10,26 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
  */
 axios.interceptors.response.use(success => {
   if(success.data.retCode && success.data.retCode==1001 ){
-    Message.error({message:success.data.retInfo})
+    Message.error({message:success.data.retInfo, duration:1000})
     return
   }
   if(success.data.retCode && success.data.retCode==1002 ){ //验证码错误
-    Message.error({message:success.data.retInfo})
+    Message.error({message:success.data.retInfo, duration:1000})
     return
-  }
-  if(success.data.retCode && success.data.retCode==200){
-    Message.success({message: success.data.retInfo})
   }
   return success.data
 }, err => {
   if(err.response.status == 504 || err.response.status==404){
-    Message.error({message: '服务器被吃了( ╯□╰ )'})
+    Message.error({message: '服务器被吃了( ╯□╰ )', duration:1000})
   }else if(err.response.status==403){
-    Message.error({message: '权限不足，请联系管理员'})
+    Message.error({message: '权限不足，请联系管理员', duration:1000})
   }else if(err.response.status==401){ //未认证，跳转到登录页
     router.replace('/')
   }else{
     if(err.response.data.msg){
-      Message.error({message: err.response.data.msg})
+      Message.error({message: err.response.data.msg, duration:1000})
     }else{
-      Message.error({message:'未知错误!'})
+      this.$message({message: "网络异常", type: 'error', duration: 1000});
     }
   }
   return

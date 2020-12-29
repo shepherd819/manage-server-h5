@@ -6,11 +6,12 @@
       </div>
 <!--      <menus :isCollapse="isCollapse"/>-->
       <el-menu class="menu-nav"
-               :default-active="currentPath"
+               :default-active="activedMenu($route.path)"
                router
                background-color="#20222A"
                text-color="rgba(255,255,255,.8)"
                active-text-color="#ffd04b"
+               @select = "handleSelect"
                :collapse="isCollapse">
         <NavMenu :menuList="menuList"></NavMenu>
       </el-menu>
@@ -25,6 +26,9 @@
         </div>
         <transition name="slide-fade">
           <router-view v-if="isRouterAlive"/>
+          <div v-if="$route.path == '/index'">
+            欢迎来到Shepherd的后台管理系统
+          </div>
         </transition>
 <!--        <router-view v-if="isRouterAlive"/>-->
       </el-main>
@@ -50,7 +54,6 @@ export default {
   data () {
     return {
       isRouterAlive: true,
-      currentPath: location.pathname,
       username:'',
       menuList:[
         {
@@ -107,6 +110,14 @@ export default {
     }
   },
   methods: {
+    handleSelect (index) {
+      if (index === this.$route.path) {
+        this.reload() //再次点击刷新路由页面
+      }
+    },
+    activedMenu (val) {
+      return val;
+    },
     reload () {
       this.isRouterAlive = false
       this.$nextTick(() => {
