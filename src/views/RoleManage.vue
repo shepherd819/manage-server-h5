@@ -1,9 +1,9 @@
 <template>
   <div id="role_manage">
     <div class="content-box">
-      <div>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addRole">新增</el-button>
-      </div>
+<!--      <div>-->
+<!--        <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addRole">新增</el-button>-->
+<!--      </div>-->
       <el-table
         :data="tableData"
         style="width: 100%">
@@ -25,12 +25,12 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              :disabled="scope.row.roleName=='ROLE_admin'"
+              :disabled="scope.row.roleName=='admin'"
               @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
             <el-button
               size="mini"
-              :disabled="scope.row.roleName=='ROLE_admin'"
+              :disabled="scope.row.roleName=='admin'"
               @click="roleEdit(scope.$index, scope.row)">权限分配
             </el-button>
             <el-button
@@ -40,9 +40,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog title="角色信息" width="700px" class="dialog1" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="角色名称" :label-width="formLabelWidth">
+      <el-dialog :title="roleDialogTitle" width="700px" class="dialog1" :visible.sync="roleDialogVisible">
+        <el-form :model="form" :rules="rules" ref="roleForm">
+          <el-form-item label="角色英文名" :label-width="formLabelWidth" prop="roleName">
+            <el-input v-model="form.roleName"
+                      maxlength="15"
+                      show-word-limit
+                      autocomplete="off"
+                      :disabled="roleDialogTitle == '角色编辑'"></el-input>
+          </el-form-item>
+          <el-form-item label="角色中文名" :label-width="formLabelWidth" prop="roleNameZh">
             <el-input v-model="form.roleNameZh"
                       maxlength="15"
                       show-word-limit
@@ -59,7 +66,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible=false">取 消</el-button>
+          <el-button @click="roleDialogVisible=false">取 消</el-button>
           <el-button type="primary" v-db-click @click="addRoleSubmit">保 存</el-button>
         </div>
       </el-dialog>
@@ -118,16 +125,27 @@
         selectUserId: [],
         roleTreeData: [],
         tableData: [],
-        dialogFormVisible: false,
+        roleDialogVisible: false,
         dialogFormVisible2: false,
         title2: '',
         dialogFormVisible3: false,
         title3: '',
+        roleDialogTitle: '',
         form: {
+          roleName: "",
           roleNameZh: "",
           roleDesc: "",
           status: true,
           permission: []
+        },
+        rules: {
+          roleName: [
+            { required: true, message: '请输入角色英文名', trigger: 'blur' },
+            { pattern:'^[a-zA-Z]+$', message: "角色英文名只能输入字符"}
+          ],
+          roleNameZh: [
+            { required: true, message: '请输入角色中文名', trigger: 'blur' }
+          ]
         },
         formLabelWidth: "120px",
         defaultProps: {
@@ -147,53 +165,46 @@
           this.form[item] = row[item]
         }
         this.form.status = row.status === "1"
-        this.dialogFormVisible = true
+        this.roleDialogTitle = '角色编辑'
+        this.roleDialogVisible = true
       },
       addRole() {
         this.form = {
+          roleName: "",
           roleNameZh: "",
           roleDesc: "",
           status: true
         }
-        this.dialogFormVisible = true
+        this.roleDialogTitle = '角色新增'
+        this.roleDialogVisible = true
       },
       addRoleSubmit() {
         this.addRoleBtnLoading = true
-        let that = this
-        if (!this.form.roleNameZh) {
-          that.$message({
-            showClose: true,
-            message: "角色名称不能为空",
-            type: "error"
-          })
-          return false
-        }
-        this.$http({
-          url: '/tsr_server_manager/bmm/role/html/post/v1/addOrUpdateRole',
-          data: {
-            data: {
-              role_id: this.form.role_id,
-              roleNameZh: this.form.roleNameZh,
-              roleDesc: this.form.roleDesc,
-              status: this.form.status ? "1" : "0"
-            }
+        this.$refs.roleForm.validate((valid)=>{
+          if(valid){
+            this.postHttp('/role/roleInfo', {
+                  roleId: this.form.roleId,
+                  roleNameZh: this.form.roleNameZh,
+                  roleDesc: this.form.roleDesc,
+                  status: this.form.status ? "1" : "0"
+            }).then(res => {
+              console.log(res)
+              this.addRoleBtnLoading = false
+              this.roleDialogVisible = false
+              if (res.retCode === "200") {
+                this.$message({message: "保存成功", type: 'success', duration: 1500});
+                this.getRoleList();
+              } else {
+                this.$message({message: res.retInfo, type: 'error', duration: 1500});
+              }
+            }).catch(err => {
+              console.log(err);
+              this.addRoleBtnLoading = false
+              this.roleDialogVisible = false
+              this.$message({message: "网络异常", type: 'error', duration: 1500});
+            });
           }
-        }).then(res => {
-          console.log(res)
-          this.addRoleBtnLoading = false
-          this.dialogFormVisible = false
-          if (res.retCode === "0") {
-            this.$message({message: "保存成功", type: 'success', duration: 1500});
-            this.getRoleList();
-          } else {
-            this.$message({message: res.retInfo, type: 'error', duration: 1500});
-          }
-        }).catch(err => {
-          console.log(err);
-          this.addRoleBtnLoading = false
-          this.dialogFormVisible = false
-          this.$message({message: "网络异常", type: 'error', duration: 1500});
-        });
+        })
       },
       // 选中子节点，默认选中父节点
       checkeTree(data) {
@@ -261,7 +272,7 @@
           data: {
             data: {
               user_id_list: _this.selectUserId,
-              role_id: _this.selectRoleId
+              roleId: _this.selectRoleId
             }
           }
         }).then(res => {
@@ -300,13 +311,13 @@
       },
       handleUser(index, row) {
         this.title3 = row.roleNameZh + "-人员分配"
-        console.log("role_id:" + row.role_id)
-        this.selectRoleId = row.role_id
+        console.log("roleId:" + row.roleId)
+        this.selectRoleId = row.roleId
         this.$http({
           url: '/tsr_server_manager/bmm/role/html/get/v1/getRoleUsers',
           data: {
             data: {
-              role_id: row.role_id
+              roleId: row.roleId
             }
           }
         }).then(res => {
@@ -330,6 +341,7 @@
           console.log(res)
           if (res.retCode === "200") {
             this.tableData = res.result
+            this.getMenuList()
           } else {
             this.$message({message: res.retInfo, type: 'error', duration: 1500});
           }
@@ -365,7 +377,6 @@
     computed: {},
     mounted() {
       this.getRoleList()
-      this.getMenuList()
     }
   }
 </script>

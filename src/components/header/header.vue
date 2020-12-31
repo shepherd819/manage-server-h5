@@ -1,7 +1,7 @@
 <template>
   <div class="header-box">
     <el-row type="flex" justify="space-between">
-      <el-col :span="12">
+      <el-col :span="8">
         <button class="btn-tool" :title="collapseTitle" @click="collapse" >
             <i :class="collapseIcon"></i>
         </button>
@@ -16,10 +16,10 @@
         </button>
         <span>{{ Utils.todayDate() }}</span>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="12">
         <MyAudio></MyAudio>
       </el-col>
-      <el-col :span="10" align="right">
+      <el-col :span="4" align="right">
         <el-dropdown trigger="click" class="user-name" @command="handleCommand">
           <span class="el-dropdown-link">
             {{ username }}<i class="el-icon-caret-bottom el-icon--right"></i>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import MyAudio from "../audio/MyAudio";
+import MyAudio from "../audio/MyAudio2";
 export default {
   components: {MyAudio},
   inject: ['reload'],
