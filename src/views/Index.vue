@@ -1,5 +1,5 @@
 <template>
-  <el-container class="index-box">
+  <el-container class="index-box" direction="horizontal">
     <el-aside width="asideWidth">
       <div class="logo">
         <img v-show="!isCollapse" src="./../assets/b_logo.png" alt="ELementUI" width="122" height="27">
@@ -26,13 +26,17 @@
         </div>
         <transition name="slide-fade">
           <router-view v-if="isRouterAlive"/>
-          <div v-if="$route.path == '/index'">
+          <div v-if="$route.path == '/index'" style="height: 200px">
             欢迎来到Shepherd的后台管理系统
           </div>
         </transition>
 <!--        <router-view v-if="isRouterAlive"/>-->
       </el-main>
+
     </el-container>
+    <el-footer>
+      <Bottom></Bottom>
+    </el-footer>
   </el-container>
 </template>
 
@@ -40,6 +44,7 @@
 import NavMenu from '@/components/menus/NavMenu'
 import Headers from '@/components/header/header'
 import NavBar from '@/components/navBar'
+import Bottom from "../components/footer/Bottom";
 export default {
   provide () {
     return {
@@ -49,64 +54,14 @@ export default {
   components: {
     NavMenu,
     Headers,
-    NavBar
+    NavBar,
+    Bottom
   },
   data () {
     return {
       isRouterAlive: true,
       username:'',
-      menuList:[
-        {
-          "menuId":"1",
-          "menuName":"主页",
-          "menuPath":"/index",
-          "menuIcon":"el-icon-location",
-          "childs":[]
-        },
-        {
-          "menuId":"2",
-          "menuName":"商场",
-          "menuPath":"/goods",
-          "menuIcon":"el-icon-goods",
-          "childs":[]
-        },
-        {
-          "menuId":"3",
-          "menuName":"文章",
-          "menuPath":"/articles",
-          "menuIcon":"el-icon-document",
-          "childs":[]
-        },
-        {
-          "menuId":"4",
-          "menuName":"图表",
-          "menuPath":"/echarts",
-          "menuIcon":"el-icon-share",
-          "childs":[]
-        },
-        {
-          "menuId":"5",
-          "menuName":"设置",
-          "menuPath":"",
-          "menuIcon":"el-icon-setting",
-          "childs":[
-            {
-              "menuId":"6",
-              "menuName":"基本资料 (空)",
-              "menuPath":"/profile",
-              "menuIcon":"",
-              "childs":[]
-            },
-            {
-              "menuId":"7",
-              "menuName":"修改密码 (空)",
-              "menuPath":"/password",
-              "menuIcon":"",
-              "childs":[]
-            }
-          ]
-        }
-      ]
+      menuList:[]
     }
   },
   methods: {
@@ -190,6 +145,13 @@ export default {
   }
   .bar {
     margin-bottom: 8px;
+  }
+  .el-footer {
+    padding: 0 20px;
+    bottom:0;
+    width: 100%;
+    text-align:center;
+    position:absolute;
   }
 }
 </style>

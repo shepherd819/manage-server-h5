@@ -10,6 +10,6 @@
 </script>
 <style>
 body{
-  margin:0px
+  margin:0;
 }
 </style>

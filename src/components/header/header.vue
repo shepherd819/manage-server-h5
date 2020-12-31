@@ -16,7 +16,10 @@
         </button>
         <span>{{ Utils.todayDate() }}</span>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="2">
+        <MyAudio></MyAudio>
+      </el-col>
+      <el-col :span="10" align="right">
         <el-dropdown trigger="click" class="user-name" @command="handleCommand">
           <span class="el-dropdown-link">
             {{ username }}<i class="el-icon-caret-bottom el-icon--right"></i>
@@ -44,11 +47,16 @@
 </template>
 
 <script>
+import MyAudio from "../audio/MyAudio";
 export default {
+  components: {MyAudio},
   inject: ['reload'],
   props:[
     'username'
   ],
+  comments:{
+    MyAudio
+  },
   data () {
     return {
       collapseIcon: 'el-icon-d-arrow-left',
@@ -124,7 +132,7 @@ export default {
     padding: 5px 10px;
     cursor: pointer;
     outline: none;
-    text-align: left;
+    /*text-align: left;*/
   }
   .user-name {
     margin-left: 20px;

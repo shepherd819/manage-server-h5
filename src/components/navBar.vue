@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div>
     <el-breadcrumb class="breadcrumb-container" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item v-for="(item) in levelList" :key="item.path" :to="item.redirect||item.path">
